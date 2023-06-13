@@ -44,4 +44,18 @@ Comment.init(
   }
 );
 
-module.exports = Post;
+// the associations
+Comment.associate = (models) => {
+    // Associate Comment with User
+    Comment.belongsTo(models.User, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+    // Associate Comment with Post
+    Comment.belongsTo(models.Post, {
+      foreignKey: 'postId',
+      onDelete: 'CASCADE'
+    });
+  };
+  
+  module.exports = Comment;

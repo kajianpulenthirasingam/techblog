@@ -1,0 +1,10 @@
+<!-- views/dashboard.handlebars -->
+
+<h1>Dashboard</h1>
+
+{{#each userPosts}}
+  <div class="post">
+    <h2>{{title}}</h2>
+    <p>{{content}}</p>
+  </div>
+{{/each}}

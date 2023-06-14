@@ -3,14 +3,21 @@ const Sequelize = require('sequelize');
 require('dotenv').config();
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  process.env.MYSQL_DATABASE,
+  process.env.MYSQL_USERNAME,
+  process.env.MYSQL_PASSWORD,
   {
-    host: 'localhost',
+    host: process.env.MYSQL_HOST,
+    port: process.env.MYSQL_PORT,
     dialect: 'mysql',
-    port: 3306
   }
 );
+sequelize.sync({ force: false })
+  .then(() => {
+    console.log('Database synced');
+  })
+  .catch((error) => {
+    console.error('Error syncing database:', error);
+  });
 
-module.exports = sequelize;
+  module.exports = sequelize;

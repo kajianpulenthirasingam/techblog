@@ -159,6 +159,36 @@ router.post('/posts/:id/comments', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+router.get('/posts/:postid/comments', async (req, res) => {
+  try {
+    // Check if the user is authenticated
+    if (!req.session.loggedIn) {
+      res.redirect('/login');
+      return;
+    }
+
+    // Find the post with the specified id
+    const post = await Post.findByPk(req.params.postId, {
+      include: [
+        {
+          model: Comment,
+          include: [{ model: User, attributes: ['username'] }] // Include the user who left the comment
+        }
+      ]
+    });
+
+    if (!post) {
+      res.status(404).json({ message: 'Post not found' });
+      return;
+    }
+
+    res.status(200).json(post.comments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 // Delete a post
 router.delete('/posts/:id', async (req, res) => {

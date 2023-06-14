@@ -160,4 +160,36 @@ router.post('/posts/:id/comments', async (req, res) => {
   }
 });
 
+// Delete a post
+router.delete('/posts/:id', async (req, res) => {
+  try {
+    // Check if the user is authenticated
+    if (!req.session.loggedIn) {
+      res.redirect('/login');
+      return;
+    }
+
+    // Find the post with the specified id
+    const post = await Post.findByPk(req.params.id);
+
+    if (!post) {
+      res.status(404).json({ message: 'Post not found' });
+      return;
+    }
+
+    // Check if the authenticated user is the owner of the post
+    if (post.userId !== req.session.userId) {
+      res.status(403).json({ message: 'You are not authorized to delete this post' });
+      return;
+    }
+
+    // Delete the post
+    await post.destroy();
+
+    res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 module.exports = router;

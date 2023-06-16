@@ -2,7 +2,8 @@ const path = require("path");
 const express = require("express");
 const session = require("express-session");
 const exphbs = require("express-handlebars");
-const routes = require("../techblog/routes");
+const routes = require('./controllers/routes');
+
 
 
 const sequelize = require("./config/connection");
